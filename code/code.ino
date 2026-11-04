@@ -1,6 +1,7 @@
 /*
  * Copyright (c) Patrick Charon
- * Licensed under 2-Clause BSD License <https://opensource.org/license/bsd-2-clause>
+ * Licensed under 2-Clause BSD Licence 
+ * <https://opensource.org/license/bsd-2-clause>
 */
 
 #include <SoftwareSerial.h>
