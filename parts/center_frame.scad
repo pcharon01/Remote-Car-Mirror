@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Patrick Charon
+ * Licensed under CERN-OHL-P <https://cern-ohl.web.cern.ch/>
+*/
+
 module quarter_chassis() {
     difference() {
         union() {
