@@ -53,13 +53,13 @@ module quarter_frame(mount_step_depth=3) {
             cube([frame_length / 2, frame_width / 2, frame_thickness]);
 
             translate([
-                mount_step_x - border_width, 
+                mount_step_x - border_width,
                 mount_step_y - border_width,
                 0
             ]) {
                 cube([
-                    mount_step_length + border_width, 
-                    border_width + mount_step_depth, 
+                    mount_step_length + border_width,
+                    border_width + mount_step_depth,
                     total_height
                 ]);
             }
@@ -82,15 +82,15 @@ module quarter_frame(mount_step_depth=3) {
 
             translate([mount_step_x, mount_hole_y, 0]) {
                 cube([
-                    mount_step_length - border_width, 
-                    mount_hole_width, 
+                    mount_step_length - border_width,
+                    mount_hole_width,
                     total_height
                 ]);
             }
 
             translate([
-                mount_step_x + screw_hole_offset, 
-                mount_step_y, 
+                mount_step_x + screw_hole_offset,
+                mount_step_y,
                 total_height / 2
             ]) rotate([90, 0, 0]) {
                 cylinder(d=screw_hole_diameter, h=border_width);
@@ -116,7 +116,7 @@ module center_frame(mount_step_depth=3) {
     rear_hole_x = (frame_length - rear_hole_length) / 2 - beam_thickness;
 
     motor_bay_x = frame_length / 2 - mount_step_length - beam_thickness;
-    
+
     difference() {
         union() {
             quarter_frame(mount_step_depth);
@@ -132,32 +132,25 @@ module center_frame(mount_step_depth=3) {
             }
 
             translate([
-                frame_length / 2 - beam_thickness, 
-                0, 
-                frame_thickness / 2
-            ]) rotate([0, 90, 0]) {
-                cylinder(
-                    d = shaft_diameter + beam_thickness, 
-                    h = beam_thickness
-                );
-            }
-
-            translate([
-                motor_bay_x, 
-                0, 
-                frame_thickness / 2
-            ]) rotate([0, 90, 0]) {
-                cylinder(
-                    d = motor_bay_width, 
-                    h = beam_thickness
-                );
-            }
-
-            translate([
-                motor_bay_x,
+                frame_length / 2 - beam_thickness,
                 0,
-                0
+                frame_thickness / 2
             ]) rotate([0, 90, 0]) {
+                cylinder(
+                    d = shaft_diameter + beam_thickness,
+                    h = beam_thickness
+                );
+            }
+
+            translate([motor_bay_x, 0, frame_thickness / 2])
+            rotate([0, 90, 0]) {
+                cylinder(
+                    d = motor_bay_width,
+                    h = beam_thickness
+                );
+            }
+
+            translate([motor_bay_x, 0, 0]) rotate([0, 90, 0]) {
                 linear_extrude(beam_thickness)
                     polygon([
                         [0, -motor_bay_width / 2],
@@ -169,11 +162,8 @@ module center_frame(mount_step_depth=3) {
                     ]);
             }
 
-            translate([
-                motor_bay_x - motor_bay_length - beam_thickness,
-                0,
-                0
-            ]) rotate([0, 90, 0]) {
+            translate([motor_bay_x - motor_bay_length - beam_thickness, 0, 0])
+            rotate([0, 90, 0]) {
                 linear_extrude(beam_thickness)
                     polygon([
                         [0, -motor_bay_width / 2],
@@ -199,14 +189,10 @@ module center_frame(mount_step_depth=3) {
         }
 
         union() {
-            translate([
-                rear_hole_x, 
-                0, 
-                frame_thickness / 2
-            ]) {
+            translate([rear_hole_x, 0, frame_thickness / 2]) {
                 cube([
-                    rear_hole_length, 
-                    rear_hole_width, 
+                    rear_hole_length,
+                    rear_hole_width,
                     frame_thickness
                 ], center = true);
             }
@@ -223,63 +209,28 @@ module center_frame(mount_step_depth=3) {
                 ], center = true);
             }
 
-            translate([
-                motor_bay_x, 
-                0, 
-                frame_thickness / 2
-            ]) rotate([0, 90, 0]) {
+            translate([motor_bay_x, 0, frame_thickness / 2 ])
+            rotate([0, 90, 0]) {
                 cylinder(
-                    d = shaft_diameter, 
+                    d = shaft_diameter,
                     h = mount_step_length + beam_thickness
                 );
             }
 
-            translate([
-                motor_bay_x - board_rack_screw_x - board_rack_screw_spacing / 2,
-                motor_bay_width / 2 + board_rack_screw_y,
-                frame_thickness / 2
-            ]) rotate([0, 0, 0]) {
-                cylinder(
-                    d = board_rack_screw_diameter, 
-                    h = frame_thickness, 
-                    center=true
-                );
-            }
-
-            translate([
-                motor_bay_x - board_rack_screw_x + board_rack_screw_spacing / 2,
-                motor_bay_width / 2 + board_rack_screw_y,
-                frame_thickness / 2
-            ]) rotate([0, 0, 0]) {
-                cylinder(
-                    d = board_rack_screw_diameter, 
-                    h = frame_thickness, 
-                    center=true
-                );
-            }
-
-            translate([
-                motor_bay_x - board_rack_screw_x - board_rack_screw_spacing / 2,
-                -motor_bay_width / 2 - board_rack_screw_y,
-                frame_thickness / 2
-            ]) rotate([0, 0, 0]) {
-                cylinder(
-                    d = board_rack_screw_diameter, 
-                    h = frame_thickness, 
-                    center=true
-                );
-            }
-
-            translate([
-                motor_bay_x - board_rack_screw_x + board_rack_screw_spacing / 2,
-                -motor_bay_width / 2 - board_rack_screw_y,
-                frame_thickness / 2
-            ]) rotate([0, 0, 0]) {
-                cylinder(
-                    d = board_rack_screw_diameter, 
-                    h = frame_thickness, 
-                    center=true
-                );
+            for (a = [-1, 1]) {
+                for (b = [-1, 1]) {
+                    translate([
+                        motor_bay_x - board_rack_screw_x + a * board_rack_screw_spacing / 2,
+                        b * (motor_bay_width / 2 + board_rack_screw_y),
+                        frame_thickness / 2
+                    ]) rotate([0, 0, 0]) {
+                        cylinder(
+                            d = board_rack_screw_diameter,
+                            h = frame_thickness,
+                            center=true
+                        );
+                    }
+                }
             }
         }
     }
@@ -289,56 +240,26 @@ module center_frame(mount_step_depth=3) {
         0,
         frame_thickness / 2
     ]) rotate([0, 90, 0]) {
-        translate([
-            motor_knob_spacing,
-            0,
-            0
-        ])
-            cylinder(
-                d = motor_knob_diameter,
-                h = motor_knob_height,
-                center = true
-            );
+        for (a = [-1, 1]) {
+            for (b = [-1, 1]) {
+                translate([a * motor_knob_spacing, 0, 0])
+                    cylinder(
+                        d = motor_knob_diameter,
+                        h = motor_knob_height,
+                        center = true
+                    );
 
-        translate([
-            -motor_knob_spacing,
-            0,
-            0
-        ])
-            cylinder(
-                d = motor_knob_diameter,
-                h = motor_knob_height,
-                center = true
-            );
-
-        translate([
-            0,
-            motor_knob_spacing,
-            0
-        ])
-            cylinder(
-                d = motor_knob_diameter,
-                h = motor_knob_height,
-                center = true
-            );
-
-        translate([
-            0,
-            -motor_knob_spacing,
-            0
-        ])
-            cylinder(
-                d = motor_knob_diameter,
-                h = motor_knob_height,
-                center = true
-            );
+                translate([0, a * motor_knob_spacing, 0])
+                    cylinder(
+                        d = motor_knob_diameter,
+                        h = motor_knob_height,
+                        center = true
+                    );
+            }
+        }
     }
 
-    translate([
-        0,
-        underside_reinforcement_spacing / 2,
-        0
-    ]) rotate([-90, 0, 0]) {
+    translate([0, underside_reinforcement_spacing / 2, 0]) rotate([-90, 0, 0]) {
         linear_extrude(underside_reinforcement_width)
             polygon([
                 [-underside_reinforcement_length / 2, 0],
